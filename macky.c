@@ -43,12 +43,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 mky_data globalMackyData; /* to be used as returned pointer to user. */
 mky_data *ptr;
 
-void mky_free() {
-	free(ptr->filebuf);
-	free(ptr);
-	ptr = NULL;
-}
-
 mky_data *mky_init(char *filename) {
 	if(ptr==NULL) ptr = (mky_data *)malloc(sizeof(mky_data));
 	ptr = &globalMackyData;
@@ -237,8 +231,6 @@ int main() {
 
 	printf("Name: %s\nDamage: %d\nRarity: %f", name, damage, Rarity);
 
-
-	mky_free();
 	return 0;
 }
 */

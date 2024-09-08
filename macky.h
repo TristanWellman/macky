@@ -50,7 +50,6 @@ typedef struct maky_data {
 	int fsize;
 } mky_data;
 
-void mky_free();
 mky_data *mky_init(char *filename);
 int mky_getIntAt(char *section, char *itemName);
 float mky_getFloatAt(char *section, char *itemName);
