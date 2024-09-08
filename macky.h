@@ -52,6 +52,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		(sizeof(x)/sizeof(x[0]))
 
 /**
+ * @typedef MKY_BOOL
+ * @brief bool definition for systems without stdbool
+ * */
+typedef int (MKY_BOOL);
+#define MKY_TRUE 1
+#define MKY_FALSE 0
+
+/**
  * @typedef mky_data
  * @brief Structure holding file buffers and other data
  * */
@@ -91,5 +99,13 @@ float mky_getFloatAt(char *section, char *itemName);
  * @param itemName Name of VALUE in macky file
  * */
 char *mky_getStrAt(char *section, char *itemName);
+
+/**
+ * @brief retrieves and parses bool from section in macky config file
+ *
+ * @param section The section at which the item resides in the macky file
+ * @param itemName Name of VALUE in macky file
+ * */
+MKY_BOOL mky_getBoolAt(char *section, char *itemName);
 
 #endif

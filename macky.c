@@ -213,7 +213,25 @@ char *mky_getStrAt(char *section, char *itemName) {
 	return data;
 }
 
+MKY_BOOL mky_getBoolAt(char *section, char *itemName) {
+	char *data = findData(section, itemName);
+	int i,item;
+	for(i=0;i<strlen(data);i++) {
+		if(checkData("FLOAT", data)) {
+			fprintf(stderr, "ERROR:: Incorrect data type for Value %s!\n", itemName);
+			exit(1);
+		}
+		if(checkData(itemName,data))
+			data+=strlen(itemName)+1;
 
+		if(checkData("TRUE", data)) return MKY_TRUE;
+		if(checkData("FALSE", data)) return MKY_FALSE;
+
+		data++;
+	}
+
+	return MKY_FALSE;
+}
 
 
 /* This is just for testing*/
@@ -228,8 +246,10 @@ int main() {
 	char *name = mky_getStrAt("ITEM", "Name");
 	int damage = mky_getIntAt("ITEM", "Damage");
 	float Rarity = mky_getFloatAt("DROP", "Rarity");
+	MKY_BOOL chestDrop = mky_getBoolAt("DROP", "ChestDrop");
 
-	printf("Name: %s\nDamage: %d\nRarity: %f", name, damage, Rarity);
+	printf("Name: %s\nDamage: %d\nRarity: %f\nChest Drop: %d\n", 
+			name, damage, Rarity, chestDrop);
 
 	return 0;
 }
