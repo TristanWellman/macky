@@ -34,6 +34,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * */
+
+/**
+ * @file macky.h
+ * @author Tristan Wellman
+ * @brief Header for Macky Lib
+ * */
+
 #ifndef MACKY_H
 #define MACKY_H
 
@@ -44,15 +51,45 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MKY_ARRLEN(x) \
 		(sizeof(x)/sizeof(x[0]))
 
+/**
+ * @typedef mky_data
+ * @brief Structure holding file buffers and other data
+ * */
 typedef struct maky_data {
 	FILE *file;
 	char *filebuf; /* malloc to size of all data in file */
 	int fsize;
 } mky_data;
 
+/**
+ * @brief Initializes all config file data and sends it into memory
+ * 
+ * @param filename The name of the configuration file
+ * */
 mky_data *mky_init(char *filename);
+
+/**
+ * @brief retrieves and parses int from section in macky config file
+ *
+ * @param section The section at which the item resides in the macky file
+ * @param itemName Name of VALUE in macky file
+ * */
 int mky_getIntAt(char *section, char *itemName);
+
+/**
+ * @brief retrieves and parses float from section in macky config file
+ *
+ * @param section The section at which the item resides in the macky file
+ * @param itemName Name of FLOAT in macky file
+ * */
 float mky_getFloatAt(char *section, char *itemName);
+
+/**
+ * @brief retrieves and parses string from section in macky config file
+ *
+ * @param section The section at which the item resides in the macky file
+ * @param itemName Name of VALUE in macky file
+ * */
 char *mky_getStrAt(char *section, char *itemName);
 
 #endif
