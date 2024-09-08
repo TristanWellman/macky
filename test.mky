@@ -1,0 +1,22 @@
+; This serves as a design testing/final design and test config file
+
+CONFIG Test. 
+
+; Functions are way out of scope of my time and I ain't tryna make another compiler but it's a cool concept
+;FUNCTION ItemEffect.
+;	something...
+;END.
+
+SECTION ITEM.
+	VALUE Name "ItemTest".
+	VALUE Damage 100.
+	;FUNCTION Effect ItemEffect.
+END.
+
+SECTION DROP.
+	FLOAT Rarity 0.1. ; needs declared as float so it doesn't terminate with decimal
+	VALUE ChestDrop TRUE.
+	VALUE ChestDropLevel 25.
+	VALUE MobDrop TRUE.
+	VALUE MobDropLevel 15.
+END.
