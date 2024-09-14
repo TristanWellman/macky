@@ -171,12 +171,12 @@ mky_array mky_getArrayAt(char *section, char *itemName) {
 		data++;
 	}	
 	if(data[0]!='[' || data[strlen(data)-1]!=']') {
-		printf("%c, %c\n", data[0], data[strlen(data)-1]);
+		/*printf("%c, %c\n", data[0], data[strlen(data)-1]);*/
 		fprintf(stderr, "ERROR:: Invalid array initialization at %s", itemName);
 		exit(1);
 	}
 	data++;data[strlen(data)-1]='\0'; /*get rid of brackets*/
-	printf("%s\n", data);
+	/*printf("%s\n", data);*/
 	char *arrData = (char *)malloc(sizeof(char)*MAX_ARR_SIZE);
 	for(i=0;i<strlen(data);i++) {
 		if(data[i]==',') data++;
@@ -313,6 +313,7 @@ int main() {
 	for(i=0;i<tmp.array_length;i++) {
 		printf("%d, ", array[i]);
 	}
+	free(tmp.array);
 
 
 	return 0;
