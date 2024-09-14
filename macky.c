@@ -97,7 +97,8 @@ char *extractValue(char *fileBuffer, int index) {
 		if('.'==fileBuffer[begin]) return NULL;
 
 		if(checkData("VALUE", fileBuffer+begin)||
-				checkData("FLOAT", fileBuffer+begin)) break;
+				checkData("FLOAT", fileBuffer+begin)||
+				checkData("ARRAY", fileBuffer+begin)) break;
 	}
 
 	int valueStartIndex = begin;
@@ -161,6 +162,41 @@ char *findData (char *section, char *itemName) {
 	return NULL;
 }
 
+mky_array mky_getArrayAt(char *section, char *itemName) {
+	char *data = findData(section, itemName); 
+	int i;
+	/*Move up to array data*/
+	for(i=0;i<strlen(data);i++) {
+		if(checkData(itemName, data)) {data += strlen(itemName)+1;break;}
+		data++;
+	}	
+	if(data[0]!='[' || data[strlen(data)-1]!=']') {
+		printf("%c, %c\n", data[0], data[strlen(data)-1]);
+		fprintf(stderr, "ERROR:: Invalid array initialization at %s", itemName);
+		exit(1);
+	}
+	data++;data[strlen(data)-1]='\0'; /*get rid of brackets*/
+	printf("%s\n", data);
+	char *arrData = (char *)malloc(sizeof(char)*MAX_ARR_SIZE);
+	for(i=0;i<strlen(data);i++) {
+		if(data[i]==',') data++;
+		if(i>=MAX_ARR_SIZE) break;
+		arrData[i]=data[i];
+	}
+	return (mky_array){(void *)arrData, strlen(arrData)};
+}
+
+mky_array mky_getIntArrayAt(char *section, char *itemName) {
+	mky_array arr = mky_getArrayAt(section, itemName);
+	char *vars = (char *)arr.array;
+	int *final = (int *)malloc(sizeof(int)*arr.array_length);
+	int i;
+	for(i=0;i<arr.array_length;i++) final[i] = vars[i] - '0';
+	arr.array = (void *)final;
+	return arr;
+}
+
+
 int mky_getIntAt(char *section, char *itemName) {
 	/*mky_getIntAt("ITEM", "Damage");*/
 	char *data = findData(section, itemName);
@@ -213,6 +249,7 @@ char *mky_getStrAt(char *section, char *itemName) {
 	return data;
 }
 
+#if !defined __STDBOOL_H
 MKY_BOOL mky_getBoolAt(char *section, char *itemName) {
 	char *data = findData(section, itemName);
 	int i,item;
@@ -225,13 +262,31 @@ MKY_BOOL mky_getBoolAt(char *section, char *itemName) {
 			data+=strlen(itemName)+1;
 
 		if(checkData("TRUE", data)) return MKY_TRUE;
-		if(checkData("FALSE", data)) return MKY_FALSE;
 
 		data++;
 	}
 
 	return MKY_FALSE;
 }
+#else
+bool mky_getBoolAt(char *section, char *itemName) {
+	char *data = findData(section, itemName);
+	int i,item;
+	for(i=0;i<strlen(data);i++) {
+		if(checkData("FLOAT", data)) {
+			fprintf(stderr, "ERROR:: Incorrect data type for Value %s!\n", itemName);
+			exit(1);
+		}
+		if(checkData(itemName,data))
+			data+=strlen(itemName)+1;
+
+		if(checkData("TRUE", data)) return true;
+		data++;
+	}
+
+	return false;
+}
+#endif
 
 
 /* This is just for testing*/
@@ -250,6 +305,15 @@ int main() {
 
 	printf("Name: %s\nDamage: %d\nRarity: %f\nChest Drop: %d\n", 
 			name, damage, Rarity, chestDrop);
+
+
+	mky_array tmp = mky_getIntArrayAt("ITEM", "test");
+	int *array = (int *)tmp.array;
+	int i;
+	for(i=0;i<tmp.array_length;i++) {
+		printf("%d, ", array[i]);
+	}
+
 
 	return 0;
 }

@@ -2,15 +2,11 @@
 
 CONFIG Test. 
 
-; Functions are way out of scope of my time and I ain't tryna make another compiler but it's a cool concept
-;FUNCTION ItemEffect.
-;	something...
-;END.
-
 SECTION ITEM.
 	VALUE Name "ItemTest".
 	VALUE Damage 100.
 	;FUNCTION Effect ItemEffect.
+	ARRAY test [0,1,2,3,4,5].
 END.
 
 SECTION DROP.
