@@ -105,14 +105,19 @@ char *extractValue(char *fileBuffer, int index) {
 	/*Now we can go forward and append to buffer til end of declaration*/
 	int i=0,fltThreash=2,curper=0;
 	int flt = 0;
+	int str = 0;
 	if(checkData("FLOAT", fileBuffer+valueStartIndex)) flt = 1;
 	for(;valueStartIndex<=strlen(fileBuffer);valueStartIndex++) {
-		if('.'==fileBuffer[valueStartIndex]) {
+		if('"'==fileBuffer[valueStartIndex]) {
+			if(!str) str=1;
+			else if(str) str=0;
+			continue;
+		}
+		if('.'==fileBuffer[valueStartIndex]&&!str) {
 			curper++;
 			if(flt) {
 				if(curper>=2) break;
-			} 
-			else break;
+			} else break;
 		}
 		buf[i]=fileBuffer[valueStartIndex];
 		i++;
