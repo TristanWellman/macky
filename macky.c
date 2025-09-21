@@ -35,7 +35,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * */
 
-#include "macky.h"
+#include <OE/macky.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -52,6 +52,7 @@ mky_data *mky_init(char *filename) {
 	ptr->file = fopen(filename, "r");
 	if(ptr->file==NULL) return NULL;
 	ptr->filebuf = (char *)malloc(sizeof(char)*1024);
+	ptr->filebuf[0] = '\0';
 	int BSIZE = 1024;
 	int curSize=0;
 	char line[1024];
@@ -89,7 +90,7 @@ int checkData(char *str, char *data) {
 }
 
 char *extractValue(char *fileBuffer, int index) {
-	char *buf = (char *)malloc(sizeof(char)*1024);
+	char *buf = (char *)malloc(sizeof(char)*1025);
 	int begin=index;
 	/*Work backward to the start of declaration*/
 	for(;begin>=0;begin--) {
@@ -105,23 +106,19 @@ char *extractValue(char *fileBuffer, int index) {
 	/*Now we can go forward and append to buffer til end of declaration*/
 	int i=0,fltThreash=2,curper=0;
 	int flt = 0;
-	int str = 0;
 	if(checkData("FLOAT", fileBuffer+valueStartIndex)) flt = 1;
 	for(;valueStartIndex<=strlen(fileBuffer);valueStartIndex++) {
-		if('"'==fileBuffer[valueStartIndex]) {
-			if(!str) str=1;
-			else if(str) str=0;
-			continue;
-		}
-		if('.'==fileBuffer[valueStartIndex]&&!str) {
+		if('.'==fileBuffer[valueStartIndex]) {
 			curper++;
 			if(flt) {
 				if(curper>=2) break;
-			} else break;
+			} 
+			else break;
 		}
 		buf[i]=fileBuffer[valueStartIndex];
 		i++;
 	}	
+	buf[i] = '\0';
 	return buf;
 }
 
@@ -205,6 +202,10 @@ mky_array mky_getIntArrayAt(char *section, char *itemName) {
 int mky_getIntAt(char *section, char *itemName) {
 	/*mky_getIntAt("ITEM", "Damage");*/
 	char *data = findData(section, itemName);
+	if(data==NULL) {
+		fprintf(stdout, "MKY:WARN:: Could not find data %s - %s\n", section, itemName);
+		return -1;
+	}
 	int i,item;
 	for(i=0;i<strlen(data);i++) {
 		if(checkData("FLOAT", data)) {
