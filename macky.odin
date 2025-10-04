@@ -14,6 +14,7 @@ foreign import mky "../libmacky.a"
 MKY_BOOL :: c.int
 
 MKY_MAX_ARR_SIZE :: 1024
+_MKY_FBSTEP 1024
 
 MKY_TRUE :: 1
 MKY_FALSE :: 2
@@ -26,7 +27,8 @@ mky_array :: struct {
 mky_data :: struct {
 	file: ^c.FILE,
 	filebuf: cstring,
-	fsize: c.int
+	fsize: c.int,
+	fcap: c.int
 }
 
 foreign mky {
@@ -35,6 +37,9 @@ foreign mky {
 	
 	@(link_name="mky_init")
 	init :: proc(filename: cstring) -> ^mky_data ---
+
+	@(link_name="mky_close")
+	close :: proc(data: ^mky_data) ---
 
 	@(link_name="mky_getIntArrayAt")
 	getIntArrayAt :: proc(section: cstring, itemName: cstring) -> mky_array ---
