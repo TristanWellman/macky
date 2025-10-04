@@ -6,8 +6,6 @@ Macky is a custom config file format that somewhat resembles COBOL.
 
 This C library supports C89 standard code.
 
-This is a small library for a much bigger project I'm working on.
-
 ## Macky Example
 
 ```
@@ -61,6 +59,7 @@ int main() {
 	}
 	free(tmp.array);
 
+    mky_close(data);
 
 	return 0;
 }
