@@ -334,7 +334,7 @@ bool mky_getBoolAt(char *section, char *itemName) {
 	free(tmp.array);
 
 	mky_close(data);
-	/*Test reopening a file*/
+
 	data = mky_init("test.mky");
 	if(data==NULL) {
 		printf("Error loading file!\n");
